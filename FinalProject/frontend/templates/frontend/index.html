@@ -21,7 +21,14 @@
     <link rel="stylesheet" type="text/css" href="static/css/font-awesome.css">
     <link rel="stylesheet" type="text/css" href="static/css/templatemo-breezed.css">
     <link rel="stylesheet" type="text/css" href="static/css/owl-carousel.css">
+
     <link rel="stylesheet" type="text/css" href="static/css/lightbox.css">
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+/>
+
+
 <style>
     /* General Styles for Dropdown */
     .main-nav .submenu ul {
@@ -98,101 +105,14 @@
 
 
 <body>
- <div id="root">
-    <!-- ***** Header Area Start ***** -->
-    <header class="header-area header-sticky">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <nav class="main-nav">
-                        <!-- ***** Logo Start ***** -->
-                        <a href="#top" style="font-size: 65px" class="logo">
-                            HIS DOC
-                        </a>
-                        <!-- ***** Logo End ***** -->
-                        <!-- ***** Menu Start ***** -->
-                        <ul class="nav">
-                            <li class="scroll-to-section"><a href="#top" style="font-size: 40px" class="active">Home</a></li>
-                            <li class="scroll-to-section"><a href="#about" style="font-size: 40px">About</a></li>
-                            <li class="submenu">
-                                <a href="javascript:;" style="font-size: 40px">Sing In/Up</a>
-                                <ul style=" background-color: transparent; font-color: black;">
-  <a href="api/register" style="font-size: 40px; color: black; background-color: transparent;">Sign Up</a>
-                                    <li ><a href="#" style="font-size: 40px; color: black; background-color:transparent;">Sign Up</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <a class='menu-trigger' >
-                            <span >Menu</span>
-                        </a>
-                        <!-- ***** Menu End ***** -->
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </header>
-    <!-- ***** Header Area End ***** -->
+<div id="main">
+ <div id="app">
 
-    <!-- ***** Main Banner Area Start ***** -->
-    <div class="main-banner header-text" id="top">
-        <div class="Modern-Slider">
-            <!-- Item -->
-            <div class="item">
-                <div class="img-fill">
-                    <img src="static/images/slide-01.jpg" alt="">
-                    <div class="text-content">
-                        <h3 style="font-size: 35px;">For Users</h3>
-                        <h5 style="font-size: 30px;">Upload your historical documents with ease.</h5>
-                        <a href="#about" class="main-stroked-button">Explore More</a>
-                    </div>
-                </div>
-            </div>
-            <!-- // Item -->
-            <!-- Item -->
-            <div class="item">
-                <div class="img-fill">
-                    <img src="static/images/slide-02.jpg" alt="">
-                    <div class="text-content">
-                        <h3 style="font-size: 35px;">For Researchers</h3>
-                        <h5 style="font-size: 30px;">Submit your algorithms to analyze historical texts.</h5>
-                        <a href="#about" class="main-filled-button">Learn More</a>
-                    </div>
-                </div>
-            </div>
-            <!-- // Item -->
-        </div>
-    </div>
-    <!-- ***** Main Banner Area End ***** -->
-
-    <!-- ***** About Area Starts ***** -->
-    <section class="section" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="left-text-content">
-                        <div class="section-heading">
-                            <h6 style="font-size: 35px;">About Us</h6>
-                            <h2 style="font-size: 30px;">Preserving History with Technology</h2>
-                        </div>
-                        <p style="font-size: 20px;">
-                            Our platform connects users who want to upload historical documents with researchers who provide advanced algorithms to read and analyze these texts. Together, we are preserving history for future generations.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="right-text-content">
-                        <img src="static/images/Historical-Paper-Documents-Whats-Made-Them-Last-1536x861.jpg" alt="Historical Documents" style="width:100%; height:auto;">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ***** About Area Ends ***** -->
-
-    <!-- ***** Footer Start ***** -->
+ </div>
  </div>
     <!-- Scripts -->
    <script src="{% static 'frontend/bundle.js' %}"></script>
+    <script src="{% static "frontend/main.js" %}"></script>
 
     <script src="static/frontend/jquery-2.1.0.min.js"></script>
     <script src="static/frontend/popper.js"></script>
