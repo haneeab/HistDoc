@@ -9,10 +9,17 @@ class RegisterUserSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True, required=True, min_length=8)
 # serializers.py
 from rest_framework import serializers
-from .models import UserFile
-
+from .models import UserFile,DeveloperFile
 class UserFileSerializer(serializers.ModelSerializer):
+    file_type = serializers.CharField(required=True)
+
     class Meta:
         model = UserFile
-        fields = ['id', 'user', 'file', 'file_type', 'extracted_text', 'uploaded_at']
-        read_only_fields = ['uploaded_at', 'extracted_text']
+        fields = ['id', 'file', 'file_type', 'user']
+        read_only_fields = ['user']  # ✅ Important
+# serializers.py
+class DeveloperFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeveloperFile
+        fields = ['id', 'file', 'file_type', 'user']
+        read_only_fields = ['user']

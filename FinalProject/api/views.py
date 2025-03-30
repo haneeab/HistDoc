@@ -39,12 +39,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User, Group
-from .serializers import RegisterUserSerializer
+from .serializers import RegisterUserSerializer,UserFileSerializer,DeveloperFileSerializer
+from rest_framework import permissions
 
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 @method_decorator(csrf_exempt, name='dispatch')
 class RegisterUserView(APIView):
+    permission_classes = [permissions.AllowAny]  # ✅ Add this line
+
     serializer_class = RegisterUserSerializer
 
     def post(self, request, format=None):
@@ -109,10 +112,19 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import Group
+from django.contrib.auth import login  # Add this import
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User, Group
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
 
 class LoginUserView(APIView):
+    permission_classes = [permissions.AllowAny]
+
     def post(self, request, format=None):
-        identifier = request.data.get("identifier")  # Accepts email or username
+        identifier = request.data.get("identifier")
         password = request.data.get("password")
 
         if not identifier or not password:
@@ -122,7 +134,6 @@ class LoginUserView(APIView):
             )
 
         try:
-            # Determine if the identifier is an email
             if "@" in identifier:
                 user = User.objects.get(email=identifier)
                 username = user.username
@@ -134,97 +145,95 @@ class LoginUserView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Authenticate the user
         user = authenticate(username=username, password=password)
+
         if user is None:
             return Response(
                 {"error": "Invalid username/email or password."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Check if the user belongs to the "User" group
-        if user.groups.filter(name="User").exists():
-            return Response(
-                {
-                    "message": "Login successful!",
-                    "redirect": "/homepage-user",  # Frontend route for HomepageUser
-                    "user": {
-                        "username": user.username,
-                        "email": user.email,
+        login(request, user)  # ✅ Start session
+
+        # Determine user's group
+        try:
+            if Group.objects.get(name="User") in user.groups.all():
+                return Response(
+                    {
+                        "message": "Login successful!",
+                        "redirect": "homepage-user",
+                        "user_type": "user",
+                        "user": {
+                            "username": user.username,
+                            "email": user.email,
+                        },
                     },
-                },
-                status=status.HTTP_200_OK,
+                    status=status.HTTP_200_OK,
+                )
+            elif Group.objects.get(name="Researcher") in user.groups.all():
+                return Response(
+                    {
+                        "message": "Login successful!",
+                        "redirect": "researcher-homepage",
+                        "user_type": "researcher",
+                        "user": {
+                            "username": user.username,
+                            "email": user.email,
+                        },
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            else:
+                return Response(
+                    {"error": "Access denied. User group not recognized."},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+        except Group.DoesNotExist:
+            return Response(
+                {"error": "User groups not configured properly."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        # If the user is not in the "User" group
-        return Response(
-            {"error": "Access denied. Only users in the 'User' group can log in."},
-            status=status.HTTP_403_FORBIDDEN,
-        )
-# 1111111111111111111111111111111111111111111111111111
+
 # views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from .models import UserFile
+from rest_framework.parsers import MultiPartParser, FormParser
 from .serializers import UserFileSerializer
-
-class UploadFileView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]  # Only allow authenticated users
-
-    def post(self, request, format=None):
-        # Include the authenticated user in the data
-        data = request.data.copy()
-        data['user'] = request.user.id  # Automatically associate the file with the logged-in user
-
-        serializer = UserFileSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "File uploaded successfully!"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-class ListUserFilesView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, format=None):
-        user = request.user
-        files = UserFile.objects.filter(user=user)
-        serializer = UserFileSerializer(files, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from rest_framework.parsers import MultiPartParser, FormParser
 from .models import UserFile
 
 class UploadFileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, format=None):
-        user = request.user
-        uploaded_file = request.FILES.get("file")
+        try:
+            file = request.FILES.get('file')
+            file_type = request.data.get('file_type')
 
-        if not uploaded_file:
-            return Response({"error": "No file provided."}, status=status.HTTP_400_BAD_REQUEST)
+            # if not file or not file_type:
+            #     return Response({"error": "File and file_type are required."}, status=400)
 
-        # Determine file type
-        if uploaded_file.content_type.startswith("image"):
-            file_type = "image"
-        elif uploaded_file.content_type == "application/pdf":
-            file_type = "pdf"
-        else:
-            return Response(
-                {"error": "Unsupported file type. Only images and PDFs are allowed."},
-                status=status.HTTP_400_BAD_REQUEST,
+            obj = UserFile.objects.create(
+                user=request.user,
+                file=file,
+                file_type="Image"
             )
 
-        user_file = UserFile.objects.create(user=user, file=uploaded_file, file_type=file_type)
-        return Response(
-            {"message": "File uploaded successfully!", "id": user_file.id, "file_type": file_type},
-            status=status.HTTP_201_CREATED,
-        )
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth import logout
+            return Response({
+                "message": "✅ File uploaded successfully!",
+                "id": obj.id,
+                "file_url": request.build_absolute_uri(obj.file.url),
+            }, status=201)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -241,3 +250,97 @@ class LogoutView(APIView):
             status=status.HTTP_200_OK
         )
 
+from django.core.files.base import ContentFile
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from api.models import UserFile
+from django.contrib.auth.models import User
+import base64
+
+
+class DebugUploadTestView(APIView):
+    def get(self, request):
+        try:
+            # Get a user (you can change the username)
+            user = User.objects.first()
+            if not user:
+                return Response({"error": "No user exists"}, status=400)
+
+            # Create fake image content
+            image_data = base64.b64decode(
+                "iVBORw0KGgoAAAANSUhEUgAAAAUA"
+                "AAAFCAYAAACNbyblAAAAHElEQVQI12P4"
+                "//8/w38GIAXDIBKE0DHxgljNBAAO"
+                "9TXL0Y4OHwAAAABJRU5ErkJggg=="
+            )  # this is a 1x1 pixel PNG
+
+            file = ContentFile(image_data, name="test.png")
+
+            # Create file entry
+            obj = UserFile.objects.create(
+                user=user,
+                file=file,
+                file_type="image"
+            )
+
+            return Response({
+                "message": "✅ File uploaded successfully",
+                "id": obj.id,
+                "url": obj.file.url,
+            }, status=201)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+# views.py
+from .models import DeveloperFile
+
+class UploadDeveloperFileView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request):
+        file = request.FILES.get('file')
+        if file:
+            DeveloperFile.objects.create(user=request.user, file=file)
+            return Response({'message': '✅ File uploaded successfully!'}, status=200)
+        return Response({'error': '❌ No file provided.'}, status=400)
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status, permissions
+import os
+from django.conf import settings
+from .models import UserFile, DeveloperFile
+from inference.inferenceVis import main as run_inference
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def run_inference_view(request, image_id):
+    try:
+        user_file = UserFile.objects.get(id=image_id, user=request.user)
+        image_path = user_file.file.path
+    except UserFile.DoesNotExist:
+        return Response({"error": "User image not found."}, status=404)
+
+    try:
+        model_file = DeveloperFile.objects.filter(user=request.user).last()
+        if not model_file:
+            return Response({"error": "Model file not found."}, status=404)
+        model_path = model_file.file.path
+    except DeveloperFile.DoesNotExist:
+        return Response({"error": "Model file missing."}, status=404)
+
+    output_dir = os.path.join(settings.MEDIA_ROOT, 'outputs')
+    os.makedirs(output_dir, exist_ok=True)
+
+    output_path = os.path.join(output_dir, f"output_{user_file.id}.png")
+    try:
+        run_inference(model_path, image_path, output_path)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+
+    return Response({
+        "original_image": request.build_absolute_uri(user_file.file.url),
+        "output_image": request.build_absolute_uri(
+            os.path.join(settings.MEDIA_URL, 'outputs', f"output_{user_file.id}.png")
+        ),
+    }, status=200)

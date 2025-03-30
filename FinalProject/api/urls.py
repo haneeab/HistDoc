@@ -15,15 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from api.views import RegisterUserView, LoginUserView,UploadFileView,ListUserFilesView,LogoutView
+from api.views import RegisterUserView, LoginUserView,UploadFileView,LogoutView,DebugUploadTestView,UploadDeveloperFileView,run_inference_view
 
 urlpatterns = [
 
     path('register/', RegisterUserView.as_view(), name='register'),
     path('login/', LoginUserView.as_view(), name='login'),
     path("upload-file/", UploadFileView.as_view(), name="upload-file"),
-    path("user-files/", ListUserFilesView.as_view(), name="user-files"),
+    # path("user-files/", ListUserFilesView.as_view(), name="user-files"),
     path("upload-image/", UploadFileView.as_view(), name="upload-image"),
     path("logout/", LogoutView.as_view(), name="logout"),
+    path("debug-upload/", DebugUploadTestView.as_view(), name="debug-upload"),
+    path("upload-developer-file/", UploadDeveloperFileView.as_view(), name='upload-developer-file'),
+    path("run-inference/<int:image_id>/", run_inference_view, name="run_inference"),
+
 
 ]

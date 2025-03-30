@@ -1,32 +1,43 @@
+
+//////////////////////////////////////////////////
 const path = require("path");
-const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, "./static/frontend"),
-    filename: "[name].js",
+    path: path.resolve(__dirname, "static/frontend"),
+    filename: "bundle.js",
+    publicPath: "/",
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./templates/frontend/index.html", // ✅ Use the new template
+    }),
+  ],
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        use: ["babel-loader"],
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
-  optimization: {
-    minimize: true,
+  resolve: {
+    extensions: [".js", ".jsx"],
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      "process.env": {
-        // This has effect on the react lib size
-            'process.env.NODE_ENV': JSON.stringify('development')
-      },
-    }),
-  ],
+  devServer: {
+    static: {
+    directory: path.join(__dirname, "static/frontend"),
+    },
+    historyApiFallback: true,
+    port: 3000,
+    open: true,
+  },
+  mode: "development",
 };

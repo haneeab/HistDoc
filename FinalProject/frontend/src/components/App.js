@@ -1,25 +1,26 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
-import HomePage from "./HomePage";
-import Register from "./Register";
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LogIn from "./LogIn";
-import Navbar from "./Navbar";
 import HomepageUser from "./HomepageUser";
-import UserImages from "./UserImages";
-import AboutUs from "./AboutUs";
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-  }
+import HomePage from "./HomePage";
+import HomepageResearcher from "./HomepageResearcher";
+import Register from "./Register";
 
-  render() {
-    return (
-      <div>
-        <HomePage />
-      </div>
-    );
-  }
+function App() {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/LogIn" component={LogIn} />                {/* ✅ Fixed */}
+        <Route path="/Register" component={Register} />
+        <Route path="/homepage-user" component={HomepageUser} />
+        <Route path="/researcher-homepage" component={HomepageResearcher} />
+        <Route exact path="/" component={HomePage} />
+      </Switch>
+    </Router>
+  );
 }
 
-const appDiv = document.getElementById("app");
-render(<App />, appDiv);
+export default App;
+import ReactDOM from "react-dom";  // ✅ THIS IS MISSING in your error
+
+ReactDOM.render(<App />, document.getElementById("app"));  // ✅ Make sure your HTML has <div id="app"></div>

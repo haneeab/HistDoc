@@ -16,13 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path ,include
-from api.views import RegisterUserView  # Import the view
+from api.views import UploadFileView ,LoginUserView  # Import the view
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/',include('api.urls')),
-    path('', include('frontend.urls')),
+    path('api/', include("api.urls")),
+    path('api/login/', LoginUserView.as_view(), name='login'),
+
+    path('', include("frontend.urls")),
 
 ]
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
