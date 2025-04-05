@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from api.views import RegisterUserView, LoginUserView,UploadFileView,LogoutView,DebugUploadTestView,UploadDeveloperFileView,run_inference_view
+from api.views import RegisterUserView,sorted_models_by_rating,all_models_feedback_summary,get_model_feedbacks,submit_feedback_view, AllDeveloperModelsView,DeleteDeveloperModelView,DeveloperModelListView,LoginUserView,UploadFileView,LogoutView,DebugUploadTestView,UploadDeveloperFileView,run_inference_view,UserImageListView
 
 urlpatterns = [
 
@@ -28,6 +28,13 @@ urlpatterns = [
     path("debug-upload/", DebugUploadTestView.as_view(), name="debug-upload"),
     path("upload-developer-file/", UploadDeveloperFileView.as_view(), name='upload-developer-file'),
     path("run-inference/<int:image_id>/", run_inference_view, name="run_inference"),
-
+    path('developer-models/', DeveloperModelListView.as_view(), name='developer-models'),
+    path('delete-developer-model/<int:pk>/', DeleteDeveloperModelView.as_view()),
+    path("user-images/", UserImageListView.as_view(), name="user-images"),
+    path('all-developer-models/', AllDeveloperModelsView.as_view(), name='all-developer-models'),
+    path("submit-feedback/", submit_feedback_view, name="submit-feedback"),
+    path("model-feedbacks/", get_model_feedbacks),
+    path("models-summary/", all_models_feedback_summary, name="models-summary"),
+    path("sorted-models/", sorted_models_by_rating),
 
 ]

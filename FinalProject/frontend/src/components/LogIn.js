@@ -144,21 +144,75 @@ class LogIn extends Component {
                                         </Link>
                                     </li>
                                     <li className="submenu">
-                                        <a href="#" style={{fontSize: "40px", fontFamily: "'Roboto', sans-serif"}}>
-                                            Sign In/Up
+                                        <a
+                                            href="#"
+                                            style={{fontSize: "37px", fontFamily: "'Roboto', sans-serif"}}
+                                        >
+                                            👤My Account
                                         </a>
-                                        <ul style={{backgroundColor: "transparent"}}>
+
+                                        <ul
+                                            style={{
+                                                position: "absolute",
+
+                                                top: "100%",
+                                                left: "60px", // shifted to the left
+                                                backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                                                backdropFilter: "blur(10px)", // frost effect
+                                                WebkitBackdropFilter: "blur(10px)", // Safari support
+                                                padding: "10px",
+                                                borderRadius: "12px",
+                                                listStyle: "none",
+                                                margin: 0,
+                                                minWidth: "180px",
+                                                boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+                                                border: "1px solid rgba(255, 255, 255, 0.3)",
+                                            }}
+                                        >
                                             <li>
-                                                                <Link to="/Register"
-                                                  style={{fontSize: "40px",backgroundColor: "rgba(255, 255, 255, 0.5)", color: "black", fontFamily: "'Roboto', sans-serif"}}>
-                                              Sign Up
-                                            </Link>
-                                            <Link to="/LogIn"
-                                                  style={{fontSize: "40px", color: "black",backgroundColor: "rgba(255, 255, 255, 0.5)", fontFamily: "'Roboto', sans-serif"}}>
-                                              Sing In
-                                            </Link>
+                                                <Link
+                                                    to="/Register"
+                                                    style={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: "10px",
+                                                        fontSize: "25px",
+                                                        backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                                                        backdropFilter: "blur(10px)", // frost effect
+                                                        WebkitBackdropFilter: "blur(10px)", // Safari support
+                                                        padding: "10px 15px",
+                                                        fontFamily: "'Roboto', sans-serif",
+                                                        color: "#007f3f",
+                                                        textDecoration: "none",
+                                                        borderRadius: "8px",
+                                                    }}
+                                                >
+                                                    📝 Sign Up
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    to="/LogIn"
+                                                    style={{
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        gap: "10px",
+                                                        fontSize: "25px",
+                                                        padding: "10px 15px",
+                                                        backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                                                        backdropFilter: "blur(10px)", // frost effect
+                                                        WebkitBackdropFilter: "blur(10px)", // Safari support
+                                                        fontFamily: "'Roboto', sans-serif",
+                                                        color: "#007f3f",
+                                                        textDecoration: "none",
+                                                        borderRadius: "8px",
+                                                    }}
+                                                >
+                                                    🔐 Sign In
+                                                </Link>
                                             </li>
                                         </ul>
+
                                     </li>
                                 </ul>
                                 <a className="menu-trigger">
@@ -186,8 +240,7 @@ class LogIn extends Component {
                         className="fw-bold mb-4"
                         style={{
                             color: "#007f3f",
-                                            fontFamily: "'Handlee', cursive",
-
+                    fontFamily: "'Open Sans', 'Roboto', sans-serif",
                         }}
                     >
                         Log In Now
@@ -212,7 +265,7 @@ class LogIn extends Component {
                         name="identifier"
                         value={identifier}
                         onChange={this.handleInputChange}
-                        style={{fontSize: "16px", border: "1px solid #ccc"}}
+                        style={{fontSize: "18px", border: "1px solid #ccc"}}
                     />
                     <MDBInput
                         wrapperClass="mb-3"
@@ -222,39 +275,37 @@ class LogIn extends Component {
                         name="password"
                         value={password}
                         onChange={this.handleInputChange}
-                        style={{fontSize: "16px", border: "1px solid #ccc"}}
+                        style={{fontSize: "18px", border: "1px solid #ccc"}}
                     />
 
                     {/* Log In Button */}
-                   <MDBBtn
-                  className="w-100 mb-3"
-                  size="md"
-                  onClick={(e) => this.handleLoginButtonPressed(e)}
-                  style={{
-                    backgroundColor: "#007f3f",
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "16px",
-                      height:"40px",
-                      width:"60px",
-                    border: "none",
-                    transition: "background-color 0.3s ease",
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.backgroundColor = "#005f30";
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.backgroundColor = "#007f3f";
-                  }}
+                    <MDBBtn
+                        className="w-100 mb-3"
+                        size="md"
+                        onClick={(e) => this.handleLoginButtonPressed(e)}
+                        style={{
+                            backgroundColor: "#007f3f",
+                            color: "white",
+                            fontWeight: "bold",
+                            fontSize: "19px",
+                            height: "40px",
+                            width: "60px",
+                            border: "none",
+                            transition: "background-color 0.3s ease",
+                        }}
+                        onMouseOver={(e) => {
+                            e.target.style.backgroundColor = "#005f30";
+                        }}
+                        onMouseOut={(e) => {
+                            e.target.style.backgroundColor = "#007f3f";
+                        }}
                     >
-                      Log In
+                        Log In
                     </MDBBtn>
 
 
-
-
                     {/* Link to Sign Up */}
-                    <p style={{fontSize: "14px", marginTop: "20px"}}>
+                    <p style={{fontSize: "18px", marginTop: "20px"}}>
                         Don't have an account?{" "}
                         <Link
                             to="/Register"
@@ -269,6 +320,7 @@ class LogIn extends Component {
     );
   }
 }
+
 // ...your LogIn class
 export default withRouter(LogIn);
 

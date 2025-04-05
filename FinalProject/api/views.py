@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -231,22 +232,21 @@ class UploadFileView(APIView):
                 "file_url": request.build_absolute_uri(obj.file.url),
             }, status=201)
 
+
         except Exception as e:
             return Response({"error": str(e)}, status=500)
 
 
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import logout
-from django.shortcuts import redirect
 
 class LogoutView(APIView):
     def post(self, request, format=None):
-        # Logout the user
         logout(request)
-        # Redirect to the home page
         return Response(
-            {"message": "Logged out successfully!", "redirect": ""},
+            {"message": "Logged out successfully!", "redirect": "/"},
             status=status.HTTP_200_OK
         )
 
@@ -310,37 +310,232 @@ from rest_framework import status, permissions
 import os
 from django.conf import settings
 from .models import UserFile, DeveloperFile
-from inference.inferenceVis import main as run_inference
+# from inference.inferenceVis import main as run_inference
+import random
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import UserFile, DeveloperFile, ExtractionRecord
+
 
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def run_inference_view(request, image_id):
+    user = request.user
+    model_id = request.data.get("model_id")
+
+    if not model_id:
+        return Response({"error": "Model ID is required."}, status=400)
+
     try:
-        user_file = UserFile.objects.get(id=image_id, user=request.user)
-        image_path = user_file.file.path
+        user_file = UserFile.objects.get(id=image_id, user=user)
     except UserFile.DoesNotExist:
         return Response({"error": "User image not found."}, status=404)
 
     try:
-        model_file = DeveloperFile.objects.filter(user=request.user).last()
-        if not model_file:
-            return Response({"error": "Model file not found."}, status=404)
-        model_path = model_file.file.path
+        model_file = DeveloperFile.objects.get(id=model_id)
     except DeveloperFile.DoesNotExist:
-        return Response({"error": "Model file missing."}, status=404)
+        return Response({"error": "Developer model not found."}, status=404)
 
-    output_dir = os.path.join(settings.MEDIA_ROOT, 'outputs')
-    os.makedirs(output_dir, exist_ok=True)
+    # ✅ Simulate inference with fake text
+    random_text = random.choice([
+        "Random extract: Lorem ipsum dolor sittttttttttttttttttttttttttttttttttttttttttttt amet.",
+        "Extracted: The quick brown fox jumpedttttttttttttttttttttttttttttttt over the lazy dog.",
+        "Test extract: AI extractedtttttttttttttttttttttttt this text.",
+        "Output: Document text nottttttttttttttttttttt recognized fully.",
+    ])
 
-    output_path = os.path.join(output_dir, f"output_{user_file.id}.png")
-    try:
-        run_inference(model_path, image_path, output_path)
-    except Exception as e:
-        return Response({"error": str(e)}, status=500)
+    # ✅ Save a new record
+    ExtractionRecord.objects.create(
+        user_file=user_file,
+        model_used=model_file,
+        extracted_text=random_text
+    )
+
+    # ✅ Update UserFile with the latest result
+    user_file.extracted_text = random_text
+    user_file.save()
 
     return Response({
         "original_image": request.build_absolute_uri(user_file.file.url),
-        "output_image": request.build_absolute_uri(
-            os.path.join(settings.MEDIA_URL, 'outputs', f"output_{user_file.id}.png")
-        ),
+        "output_image": request.build_absolute_uri(user_file.file.url),  # Replace with actual output path if needed
+        "extracted_text": random_text,
     }, status=200)
+
+# @api_view(['POST'])
+# @permission_classes([permissions.IsAuthenticated])
+# def run_inference_view(request, image_id):
+#     return Response({'error': '❌ No file provided.'}, status=400)
+
+    # try:
+    #     user_file = UserFile.objects.get(id=image_id, user=request.user)
+    #     image_path = user_file.file.path
+    # except UserFile.DoesNotExist:
+    #     return Response({"error": "User image not found."}, status=404)
+    #
+    # try:
+    #     model_file = DeveloperFile.objects.filter(user=request.user).last()
+    #     if not model_file:
+    #         return Response({"error": "Model file not found."}, status=404)
+    #     model_path = model_file.file.path
+    # except DeveloperFile.DoesNotExist:
+    #     return Response({"error": "Model file missing."}, status=404)
+    #
+    # output_dir = os.path.join(settings.MEDIA_ROOT, 'outputs')
+    # os.makedirs(output_dir, exist_ok=True)
+    #
+    # output_path = os.path.join(output_dir, f"output_{user_file.id}.png")
+    # try:
+    #     run_inference(model_path, image_path, output_path)
+    # except Exception as e:
+    #     return Response({"error": str(e)}, status=500)
+    #
+    # return Response({
+    #     "original_image": request.build_absolute_uri(user_file.file.url),
+    #     "output_image": request.build_absolute_uri(
+    #         os.path.join(settings.MEDIA_URL, 'outputs', f"output_{user_file.id}.png")
+    #     ),
+    # }, status=200)
+# views.py
+
+from .serializers import DeveloperFileListSerializer,UserFileSerializer1  # use the list serializer
+
+class DeveloperModelListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_files = DeveloperFile.objects.filter(user=request.user)
+        serializer = DeveloperFileListSerializer(user_files, many=True)
+        return Response(serializer.data)
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import DeveloperFile,Feedback
+
+class DeleteDeveloperModelView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        try:
+            model_file = DeveloperFile.objects.get(pk=pk, user=request.user)
+            model_file.delete()
+            return Response({"message": "Model deleted!"}, status=status.HTTP_200_OK)
+        except DeveloperFile.DoesNotExist:
+            return Response({"error": "Model not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class UserImageListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        images = UserFile.objects.filter(user=user, file_type="Image")
+        serializer = UserFileSerializer1(images, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class AllDeveloperModelsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        all_models = DeveloperFile.objects.all()
+        serializer = DeveloperFileListSerializer(all_models, many=True)
+        return Response(serializer.data)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_feedback_view(request):
+    rating = request.data.get('rating')
+    feedback_text = request.data.get('feedback')
+    extraction_id = request.data.get('extraction_id')
+
+    if not (rating and feedback_text and extraction_id):
+        return Response({"error": "Missing required fields."}, status=400)
+
+    try:
+        extraction = ExtractionRecord.objects.get(id=extraction_id, user_file__user=request.user)
+    except ExtractionRecord.DoesNotExist:
+        return Response({"error": "Extraction record not found."}, status=404)
+
+    Feedback.objects.create(
+        user=request.user,
+        model=extraction.model_used,  # ✅ Pulls the correct DeveloperFile
+        feedback=feedback_text,
+        rating=int(rating),
+    )
+
+    return Response({"message": "✅ Feedback submitted successfully!"}, status=201)
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Feedback, DeveloperFile
+from .serializers import FeedbackSerializer
+from django.db.models import Avg
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_model_feedbacks(request):
+    model_id = request.GET.get('model_id')
+    if not model_id:
+        return Response({'error': 'Missing model_id'}, status=400)
+
+    try:
+        model = DeveloperFile.objects.get(id=model_id)
+    except DeveloperFile.DoesNotExist:
+        return Response({'error': 'Model not found'}, status=404)
+
+    feedbacks = Feedback.objects.filter(model=model)
+    avg_rating = feedbacks.aggregate(Avg('rating'))['rating__avg']
+
+    serializer = FeedbackSerializer(feedbacks, many=True)
+    return Response({
+        'feedbacks': serializer.data,
+        'average_rating': round(avg_rating, 2) if avg_rating else None,
+        'model_name': model.file.name.split("/")[-1]
+    })
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import DeveloperFile, Feedback
+from .serializers import FeedbackSerializer
+from django.db.models import Avg
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def all_models_feedback_summary(request):
+    all_models = DeveloperFile.objects.all()
+    result = []
+
+    for model in all_models:
+        feedbacks = model.feedbacks.order_by('-created_at')[:2]
+        average_rating = model.feedbacks.aggregate(avg=Avg('rating'))['avg']
+        result.append({
+            'model_id': model.id,
+            'model_name': model.file.name,
+            'average_rating': round(average_rating, 2) if average_rating else None,
+            'latest_feedbacks': FeedbackSerializer(feedbacks, many=True).data
+        })
+
+    return Response(result)
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.db.models import Avg
+from .models import DeveloperFile
+
+
+@api_view(['GET'])
+def sorted_models_by_rating(request):
+    models = DeveloperFile.objects.annotate(avg_rating=Avg('feedbacks__rating')).order_by('-avg_rating')
+
+    data = []
+    for model in models:
+        data.append({
+            'id': model.id,
+            'name': model.file.name,
+            'average_rating': round(model.avg_rating or 0, 2),
+        })
+
+    return Response(data)

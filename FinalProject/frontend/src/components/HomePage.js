@@ -34,8 +34,11 @@ export default class HomePage extends Component {
                           {/* ***** Menu Start ***** */}
                           <ul className="nav">
                             <li className="scroll-to-section">
-                              <a href="#top" style={{fontSize: "40px", fontFamily: "'Roboto', sans-serif"}}
-                                 className="active">
+                              <a
+                                  href="#top"
+                                  style={{fontSize: "40px", fontFamily: "'Roboto', sans-serif"}}
+                                  className="active"
+                              >
                                 Home
                               </a>
                             </li>
@@ -45,21 +48,76 @@ export default class HomePage extends Component {
                               </a>
                             </li>
                             <li className="submenu">
-                              <a href="#" style={{fontSize: "40px", fontFamily: "'Roboto', sans-serif"}}>
-                                Sign In/Up
+                              <a
+                                  href="#"
+                                  style={{fontSize: "37px", fontFamily: "'Roboto', sans-serif"}}
+                              >
+                                👤My Account
                               </a>
-                              <ul style={{backgroundColor: "transparent"}}>
+
+                              <ul
+                                  style={{
+                                    position: "absolute",
+
+                                    top: "100%",
+                                    left: "60px", // shifted to the left
+                                    backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                                    backdropFilter: "blur(10px)", // frost effect
+                                    WebkitBackdropFilter: "blur(10px)", // Safari support
+                                    padding: "10px",
+                                    borderRadius: "12px",
+                                    listStyle: "none",
+                                    margin: 0,
+                                    minWidth: "180px",
+                                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+                                    border: "1px solid rgba(255, 255, 255, 0.3)",
+                                  }}
+                              >
                                 <li>
-                                   <Link to="/Register"
-                                  style={{fontSize: "40px",backgroundColor: "rgba(255, 255, 255, 0.5)", color: "black", fontFamily: "'Roboto', sans-serif"}}>
-                              Sign Up
-                            </Link>
-                            <Link to="/LogIn"
-                                  style={{fontSize: "40px", color: "black",backgroundColor: "rgba(255, 255, 255, 0.5)", fontFamily: "'Roboto', sans-serif"}}>
-                              Sing Inhhh
-                            </Link>
+                                  <Link
+                                      to="/Register"
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "10px",
+                                        fontSize: "25px",
+                                        backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                                    backdropFilter: "blur(10px)", // frost effect
+                                    WebkitBackdropFilter: "blur(10px)", // Safari support
+                                        padding: "10px 15px",
+                                        fontFamily: "'Roboto', sans-serif",
+                                        color: "#007f3f",
+                                        textDecoration: "none",
+                                        borderRadius: "8px",
+                                      }}
+                                  >
+                                    📝 Sign Up
+                                  </Link>
+                                </li>
+                                <li>
+                                  <Link
+                                      to="/LogIn"
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "10px",
+                                        fontSize: "25px",
+                                        padding: "10px 15px",
+                                        backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                                    backdropFilter: "blur(10px)", // frost effect
+                                    WebkitBackdropFilter: "blur(10px)", // Safari support
+                                        fontFamily: "'Roboto', sans-serif",
+                                        color: "#007f3f",
+                                        textDecoration: "none",
+                                        borderRadius: "8px",
+                                      }}
+                                  >
+                                    🔐 Sign In
+                                  </Link>
                                 </li>
                               </ul>
+
+
                             </li>
                           </ul>
                           <a className="menu-trigger">
@@ -71,6 +129,7 @@ export default class HomePage extends Component {
                     </div>
                   </div>
                 </header>
+
                 {/* ***** Header Area End ***** */}
                 {/* ***** Main Banner Area Start ***** */}
                 <div className="main-banner header-text" id="top">
@@ -80,7 +139,7 @@ export default class HomePage extends Component {
                       <div className="img-fill">
                         <img src="static/images/slide-01.jpg" alt=""/>
                         <div className="text-content">
-                          <h3 style={{fontSize: "35px"}}>For Users</h3>
+                          <h3 style={{fontSize: "35px"}}>For Researchers</h3>
                           <h5 style={{fontSize: "30px"}}>Upload your historical documents with ease.</h5>
                           <a href="#about" className="main-stroked-button">
                             Explore More
@@ -93,7 +152,7 @@ export default class HomePage extends Component {
                       <div className="img-fill">
                         <img src="static/images/slide-02.jpg" alt=""/>
                         <div className="text-content">
-                          <h3 style={{fontSize: "35px"}}>For Researchers</h3>
+                          <h3 style={{fontSize: "35px"}}>For Developer</h3>
                           <h5 style={{fontSize: "30px"}}>
                             Submit your algorithms to analyze historical texts.
                           </h5>

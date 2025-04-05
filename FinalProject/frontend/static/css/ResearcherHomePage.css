@@ -1,0 +1,70 @@
+/* components/ResearcherHomePage.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.researcher-page {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.navbar {
+  background-color: #007f3f;
+  padding: 1rem;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.navbar li a:hover,
+.navbar li a.active {
+  text-decoration: underline;
+  color: #caffd0;
+}
+
+.upload-container {
+  padding: 2rem;
+  text-align: center;
+}
+
+.upload-form {
+  margin-top: 1rem;
+}
+
+.upload-form input[type="file"] {
+  margin-right: 1rem;
+}
+
+.upload-form button {
+  background-color: #007f3f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.upload-form button:hover {
+  background-color: #006b36;
+}
+
+.upload-message {
+  margin-top: 1rem;
+  color: #333;
+  font-weight: bold;
+}

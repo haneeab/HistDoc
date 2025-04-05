@@ -23,3 +23,38 @@ class DeveloperFileSerializer(serializers.ModelSerializer):
         model = DeveloperFile
         fields = ['id', 'file', 'file_type', 'user']
         read_only_fields = ['user']
+# serializers.py
+
+class DeveloperFileListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeveloperFile
+        fields = ['id', 'file']
+from rest_framework import serializers
+from .models import UserFile
+# serializers.py
+from rest_framework import serializers
+from .models import UserFile, ExtractionRecord
+class UserFileSerializer1(serializers.ModelSerializer):
+    extraction_id = serializers.SerializerMethodField()
+    model_used = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserFile
+        fields = ['id', 'file', 'extracted_text', 'extraction_id', 'model_used']
+
+    def get_extraction_id(self, obj):
+        last_extraction = obj.extractions.last()
+        return last_extraction.id if last_extraction else None
+
+    def get_model_used(self, obj):
+        last_extraction = obj.extractions.last()
+        return last_extraction.model_used.file.name if last_extraction else None
+
+from rest_framework import serializers
+from .models import Feedback
+class FeedbackSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = Feedback
+        fields = ['id', 'username', 'feedback', 'rating', 'created_at']

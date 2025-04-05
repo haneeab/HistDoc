@@ -155,31 +155,75 @@ export default class Register extends Component {
                         </Link>
                       </li>
                       <li className="submenu">
-                        <a href="#" style={{fontSize: "40px", fontFamily: "'Roboto', sans-serif"}}>
-                          Sign In/Up
+                        <a
+                            href="#"
+                            style={{fontSize: "37px", fontFamily: "'Roboto', sans-serif"}}
+                        >
+                          👤My Account
                         </a>
-                        <ul style={{backgroundColor: "transparent"}}>
+
+                        <ul
+                            style={{
+                              position: "absolute",
+
+                              top: "100%",
+                              left: "60px", // shifted to the left
+                              backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                              backdropFilter: "blur(10px)", // frost effect
+                              WebkitBackdropFilter: "blur(10px)", // Safari support
+                              padding: "10px",
+                              borderRadius: "12px",
+                              listStyle: "none",
+                              margin: 0,
+                              minWidth: "180px",
+                              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+                              border: "1px solid rgba(255, 255, 255, 0.3)",
+                            }}
+                        >
                           <li>
-                            <Link to="/Register"
-                                  style={{
-                                    fontSize: "40px",
-                                    backgroundColor: "rgba(255, 255, 255, 0.5)",
-                                    color: "black",
-                                    fontFamily: "'Roboto', sans-serif"
-                                  }}>
-                              Sign Up
+                            <Link
+                                to="/Register"
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "10px",
+                                  fontSize: "25px",
+                                  backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                                  backdropFilter: "blur(10px)", // frost effect
+                                  WebkitBackdropFilter: "blur(10px)", // Safari support
+                                  padding: "10px 15px",
+                                  fontFamily: "'Roboto', sans-serif",
+                                  color: "#007f3f",
+                                  textDecoration: "none",
+                                  borderRadius: "8px",
+                                }}
+                            >
+                              📝 Sign Up
                             </Link>
-                            <Link to="/LogIn"
-                                  style={{
-                                    fontSize: "40px",
-                                    color: "black",
-                                    backgroundColor: "rgba(255, 255, 255, 0.5)",
-                                    fontFamily: "'Roboto', sans-serif"
-                                  }}>
-                              Sing In
+                          </li>
+                          <li>
+                            <Link
+                                to="/LogIn"
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "10px",
+                                  fontSize: "25px",
+                                  padding: "10px 15px",
+                                  backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
+                                  backdropFilter: "blur(10px)", // frost effect
+                                  WebkitBackdropFilter: "blur(10px)", // Safari support
+                                  fontFamily: "'Roboto', sans-serif",
+                                  color: "#007f3f",
+                                  textDecoration: "none",
+                                  borderRadius: "8px",
+                                }}
+                            >
+                              🔐 Sign In
                             </Link>
                           </li>
                         </ul>
+
                       </li>
                     </ul>
                     <a className="menu-trigger">
@@ -195,8 +239,8 @@ export default class Register extends Component {
           <MDBCard
               className="p-4 shadow-5"
               style={{
-                marginTop: "50px",
-                width: "450px",
+                marginTop: "15px",
+                width: "460px",
                 backgroundColor: "white",
                 border: "2px solid black",
                 borderRadius: "10px",
@@ -208,7 +252,7 @@ export default class Register extends Component {
                   className="fw-bold mb-4"
                   style={{
                     color: "#007f3f",
-                    fontFamily: "'Handlee', cursive",
+                    fontFamily: "'Open Sans', 'Roboto', sans-serif",
 
                   }}
               >
@@ -230,7 +274,7 @@ export default class Register extends Component {
                       name="firstName"
                       value={firstName}
                       onChange={this.handleInputChange}
-                      style={{fontSize: "14px", border: "1px solid #ccc"}}
+                      style={{fontSize: "16px", border: "1px solid #ccc"}}
                   />
                 </MDBCol>
 
@@ -243,7 +287,7 @@ export default class Register extends Component {
                       name="lastName"
                       value={lastName}
                       onChange={this.handleInputChange}
-                      style={{fontSize: "14px", border: "1px solid #ccc"}}
+                      style={{fontSize: "16px", border: "1px solid #ccc"}}
                   />
                 </MDBCol>
               </MDBRow>
@@ -256,7 +300,7 @@ export default class Register extends Component {
                   name="email"
                   value={email}
                   onChange={this.handleInputChange}
-                  style={{fontSize: "14px", border: "1px solid #ccc"}}
+                  style={{fontSize: "16px", border: "1px solid #ccc"}}
               />
               <MDBInput
                   wrapperClass="mb-3"
@@ -266,7 +310,7 @@ export default class Register extends Component {
                   name="username"
                   value={username}
                   onChange={this.handleInputChange}
-                  style={{fontSize: "14px", border: "1px solid #ccc"}}
+                  style={{fontSize: "16px", border: "1px solid #ccc"}}
               />
               <MDBInput
                   wrapperClass="mb-3"
@@ -276,7 +320,7 @@ export default class Register extends Component {
                   name="password"
                   value={password}
                   onChange={this.handleInputChange}
-                  style={{fontSize: "14px", border: "1px solid #ccc"}}
+                  style={{fontSize: "16px", border: "1px solid #ccc"}}
               />
               <MDBInput
                   wrapperClass="mb-3"
@@ -286,7 +330,7 @@ export default class Register extends Component {
                   name="rePassword"
                   value={rePassword}
                   onChange={this.handleInputChange}
-                  style={{fontSize: "14px", border: "1px solid #ccc"}}
+                  style={{fontSize: "16px", border: "1px solid #ccc"}}
               />
 
               {/* Sign Up Button */}
@@ -306,7 +350,7 @@ export default class Register extends Component {
               </MDBBtn>
 
               {/* Link to Log In */}
-              <p style={{fontSize: "14px", marginTop: "10px"}}>
+              <p style={{fontSize: "16px", marginTop: "5px"}}>
                 Already have an account?{" "}
                 <Link to="/LogIn" style={{color: "#007f3f", fontWeight: "bold"}}>
                   Log In
