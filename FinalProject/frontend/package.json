@@ -1,12 +1,15 @@
 {
   "name": "frontend",
   "version": "1.0.0",
+    "proxy": "http://127.0.0.1:8000",
+
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode development --open",
     "build": "webpack"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",

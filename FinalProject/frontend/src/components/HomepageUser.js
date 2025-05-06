@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Navbar from "./Navbar";
-import { FaUpload } from "react-icons/fa"; // 👈 install with: npm install react-icons
+import { FaUpload } from "react-icons/fa"; //
 
 function getCookie(name) {
   let cookieValue = null;
@@ -68,7 +68,7 @@ fetch("http://127.0.0.1:8000/api/all-developer-models/", {
   handleImageUpload = () => {
     const { file } = this.state;
     if (!file) {
-      alert("🚨 No file selected!");
+      alert(" No file selected!");
       return;
     }
 

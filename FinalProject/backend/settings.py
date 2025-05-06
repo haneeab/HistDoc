@@ -28,8 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "http://localhost:3000"
 ]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -149,15 +150,32 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'static'),  # 👈 tell Django where to look
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # 👈 where Django collects static files
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "backend", "media")
+STATICFILES_DIRS = [
+    BASE_DIR / 'frontend' / 'static',  # adjust path as needed
+]
+
+# At the top
+
+# Media settings
+from pathlib import Path
+DEBUG = True
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # FinalProject/media/
+DEBUG = True
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+import sys
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }

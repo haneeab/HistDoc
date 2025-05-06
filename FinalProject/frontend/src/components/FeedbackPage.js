@@ -27,40 +27,36 @@ class FeedbackPage extends Component {
     };
   }
 
+  handleSubmit = async (e) => {
+    e.preventDefault();
 
+const modelId = this.props.match.params.modelId;
+    const { feedback, rating } = this.state;
 
-handleSubmit = async (e) => {
-  e.preventDefault();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/submit-feedback/", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model_id: modelId,
+          rating: rating,
+          feedback: feedback,
+        }),
+      });
 
-  const extractionId = this.props.match.params.extractionId;
-  const { feedback, rating } = this.state;
+      const data = await response.json();
 
-  try {
-    const response = await fetch("http://127.0.0.1:8000/api/submit-feedback/", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "X-CSRFToken": getCookie("csrftoken"),
-        "Content-Type": "application/json",
-      },
-   body: JSON.stringify({
-  extraction_id: this.props.match.params.extraction_id,  // ✅ fix here
-  rating: rating,
-  feedback: feedback,
-}),
+      if (!response.ok) throw new Error(data.error || "Failed to submit feedback");
 
-
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.error || "Failed to submit feedback");
-
-this.props.history.push("/user-images");
-  } catch (err) {
-    this.setState({ message: "❌ Error: " + err.message });
-  }
-};
+      this.props.history.push("/user-images");
+    } catch (err) {
+      this.setState({ message: "❌ Error: " + err.message });
+    }
+  };
 
   render() {
     const { feedback, rating, message } = this.state;
@@ -85,7 +81,7 @@ this.props.history.push("/user-images");
               backgroundColor: "white",
               borderRadius: "15px",
               padding: "30px",
-                marginTop:"20px",
+              marginTop: "20px",
               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
             }}
           >
@@ -99,58 +95,57 @@ this.props.history.push("/user-images");
               </p>
             )}
 
-              <form onSubmit={this.handleSubmit}>
-                  <div style={{marginBottom: "15px"}}>
-                      <label style={{fontWeight: "bold"}}>Feedback:</label>
-                      <textarea
-                          required
-                          value={feedback}
-                          onChange={(e) => this.setState({feedback: e.target.value})}
-                          style={{
-                              width: "100%",
-                              minHeight: "100px",
-                              padding: "10px",
-                              borderRadius: "5px",
-                              border: "1px solid #ccc",
-                          }}
-                      />
-                  </div>
+            <form onSubmit={this.handleSubmit}>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={{ fontWeight: "bold" }}>Feedback:</label>
+                <textarea
+                  required
+                  value={feedback}
+                  onChange={(e) => this.setState({ feedback: e.target.value })}
+                  style={{
+                    width: "100%",
+                    minHeight: "100px",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                  }}
+                />
+              </div>
 
-                  <div style={{marginBottom: "15px"}}>
-                      <label style={{fontWeight: "bold"}}>Rating (1-5):</label>
-                      <input
-                          type="number"
-                          required
-                          min="1"
-                          max="5"
-                          value={rating}
-                          onChange={(e) => this.setState({rating: e.target.value})}
-                          style={{
-                              width: "100%",
-                              padding: "10px",
-                              borderRadius: "5px",
-                              border: "1px solid #ccc",
-                          }}
-                      />
-                  </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={{ fontWeight: "bold" }}>Rating (1-5):</label>
+                <input
+                  type="number"
+                  required
+                  min="1"
+                  max="5"
+                  value={rating}
+                  onChange={(e) => this.setState({ rating: e.target.value })}
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    border: "1px solid #ccc",
+                  }}
+                />
+              </div>
 
-                  <button
-                      type="submit"
-                      style={{
-                          width: "100%",
-                          padding: "10px",
-                          backgroundColor: "#007f3f",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "5px",
-                          fontWeight: "bold",
-                          cursor: "pointer",
-                      }}
-                  >
-                      Submit Feedback
-                  </button>
-
-              </form>
+              <button
+                type="submit"
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  backgroundColor: "#007f3f",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                Submit Feedback
+              </button>
+            </form>
           </div>
         </div>
       </>

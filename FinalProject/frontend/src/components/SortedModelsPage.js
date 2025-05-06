@@ -1,6 +1,5 @@
-// SortedModelsPage.js
 import React, { Component } from "react";
-import NavbarDev from "./NavbarDev";
+import Navbar from "./Navbar";
 
 export default class SortedModelsPage extends Component {
   state = {
@@ -16,31 +15,68 @@ export default class SortedModelsPage extends Component {
   }
 
   render() {
+    const { models } = this.state;
+
     return (
       <>
-        <NavbarDev />
-        <div style={{ padding: "80px 20px", background: "linear-gradient(to bottom right, #007f3f, #8b8b8b)", minHeight: "100vh" }}>
-          <h2 style={{ textAlign: "left", color: "tan",marginTop:"10px" }}>
-            📊 Models Ordered by Average Rating
+        <Navbar />
+        <div
+          style={{
+            minHeight: "100vh",
+            paddingTop: "100px",
+            background: "linear-gradient(to bottom right, #007f3f, #e6ffe6)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <h2
+            style={{
+              color: "#fff",
+              marginBottom: "30px",
+              fontFamily: "'Handlee', cursive",
+              fontSize: "2rem",
+              textShadow: "1px 1px 3px rgba(0,0,0,0.2)",
+            }}
+          >
+            📊 Top Rated Models
           </h2>
-          {this.state.models.map((model, index) => (
+
+          {models.map((model, index) => (
             <div
               key={model.id}
               style={{
-                background: "white",
-                padding: "15px",
-                margin: "20px auto",
+                backgroundColor: "white",
+                width: "90%",
                 maxWidth: "600px",
-                borderRadius: "10px",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+                padding: "20px",
+                borderRadius: "15px",
+                marginBottom: "20px",
+                boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
+                transition: "transform 0.2s ease",
               }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.02)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
             >
-              <h3 style={{ color: "#007f3f" }}>{index + 1}. {model.name}</h3>
-<p>
-  {Array(Math.round(model.average_rating)).fill("⭐").join("")}
-  {" "}
-  ({model.average_rating})
-</p>
+              <h3
+                style={{
+                  marginBottom: "10px",
+                  color: "#007f3f",
+                  fontSize: "20px",
+                }}
+              >
+                {index + 1}. {model.name.split("/").pop()}
+              </h3>
+              <p style={{ margin: 0, fontSize: "16px", color: "#333" }}>
+                <span style={{ fontSize: "18px", color: "#ffc107" }}>
+                  {"⭐".repeat(Math.round(model.average_rating))}
+                </span>{" "}
+                ({model.average_rating})
+              </p>
             </div>
           ))}
         </div>

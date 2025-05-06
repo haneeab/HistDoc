@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
+import { FaImages, FaChartBar, FaInfoCircle } from "react-icons/fa";
+
 const getCookie = (name) => {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -15,6 +19,17 @@ const getCookie = (name) => {
   return cookieValue;
 };
 const Navbar = () => {
+     const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 100); // you can change 100 to 50 or any number
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
    const handleLogout = async () => {
   try {
     const response = await fetch("/api/logout/", {
@@ -40,22 +55,29 @@ const Navbar = () => {
 };
 
   return (
-    <header className="header-area header-sticky">
+    <header className="header-area header-sticky"
+      style={{
+        backgroundColor: scrolled ? "white" : "transparent",
+
+      }}>
       <link
         href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lobster&family=Handlee&family=Open+Sans&display=swap"
         rel="stylesheet"
       />
-      <div className="container">
+      <div className="container"  style={{maxWidth: "1200px", margin: "5 auto"}}>
         <div className="row">
           <div className="col-12">
-            <nav className="main-nav">
+            <nav className="main-nav"
+           style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+
+
               {/* Logo */}
               <
-                Link to="/homepage-user"
+                Link to="/ManuscriptListPage"
                 style={{
-                  fontSize: "65px",
+                  fontSize: "62px",
                   fontFamily: "'Lobster', cursive",
-                  color: "white",
+                  color: scrolled ? "#007f3f" : "white",
                   textDecoration: "none",
                 }}
                 className="logo"
@@ -69,45 +91,44 @@ const Navbar = () => {
                     style={{
                         listStyle: "none",
                         display: "flex",
-                        gap: "30px",
+                        gap: "24px",
                         margin: 0,
-                        padding: 0,
-                        fontSize: "40px",
-                        fontFamily: "'Open Sans', 'Roboto', sans-serif",
+                        padding: 3,
                         alignItems: "center",
                     }}
                 >
 
                     <li className="scroll-to-section">
-                        <Link to="/user-images" style={{fontSize: "25px", color: "white"}}>
-                            My Images
+                        <Link to="/ManuscriptListPage" style={{fontSize: "23px", color: scrolled ? "black" : "white" }}>
+                            <FaImages /> My Folders
                         </Link>
                     </li>
                     <li className="scroll-to-section">
-                        <Link to="/SortedModelsPage" style={{fontSize: "25px", color: "white"}}>
-                            TopModels
+                        <Link to="/SortedModelsPage" style={{fontSize: "23px", color: scrolled ? "black" : "white" }}>
+                           <FaChartBar /> TopModels
                         </Link>
                     </li>
                     <li className="scroll-to-section">
-                        <Link to="/about-us" style={{fontSize: "25px", color: "white"}}>
-                            About Us
+                        <Link to="/about-us" style={{fontSize: "23px", color: scrolled ? "black" : "white" }}>
+                           <FaInfoCircle /> About Us
                         </Link>
                     </li>
                     <li className="scroll-to-section">
                         <button
                             onClick={handleLogout}
                             style={{
-                                fontSize: "25px",
+                                fontSize: "22px",
                                 fontFamily: "'Roboto', sans-serif",
                                 background: "transparent",
                                 border: "none",
-                                color: "white",
+                                 color: scrolled ? "black" : "white",
                                 cursor: "pointer",
                                 textDecoration: "none",
                                 padding: 0,
+                                marginBottom:"0px",
                             }}
                         >
-                            🧾 Logout
+                              <FiLogOut /> Logout
                         </button>
                     </li>
 

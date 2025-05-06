@@ -59,7 +59,6 @@ export default class Register extends Component {
   handleRegisterButtonPressed() {
     const { username, firstName, lastName, email, password, rePassword } = this.state;
 
-    // Client-side validation for password match
     if (password !== rePassword) {
       this.setState({
         error: "Passwords do not match.",
@@ -84,33 +83,38 @@ export default class Register extends Component {
       }),
     };
 
-    fetch("/api/register/", requestOptions)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return response.json().then((err) => {
-          throw new Error(err.error || "Failed to register user.");
-        });
-      })
-      .then((data) => {
-        this.setState({
-          message: data.message || "User registered successfully!",
-          error: "",
-          username: "",
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          rePassword: "",
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          message: "",
-          error: error.message,
-        });
-      });
+   fetch("/api/register/", requestOptions)
+  .then((response) =>
+    response.json().then((data) => {
+      if (!response.ok) {
+        throw new Error(data.error || Object.values(data.details).flat().join(" ") || "Registration failed.");
+      }
+      return data;
+    })
+  )
+  .then((data) => {
+    this.setState({
+      message: data.message || "User registered successfully!",
+      error: "",
+      username: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      rePassword: "",
+    });
+
+    setTimeout(() => {
+      this.props.history.push("/LogIn");
+    }, 1500);
+  })
+  .catch((error) => {
+    this.setState({
+      message: "",
+      error: error.message,
+    });
+  });
+
   }
 
   render() {

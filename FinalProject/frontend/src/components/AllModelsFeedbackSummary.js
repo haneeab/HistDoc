@@ -44,7 +44,8 @@ export default function AllModelsFeedbackSummary() {
               boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
             }}
           >
-            <h3 style={{ color: "#007f3f" }}>{model.model_name}</h3>
+
+            <h3 style={{ color: "#007f3f" }}>{model.model_name.split("/").pop()}</h3>
             <p>⭐ Average Rating: <strong>{model.average_rating ?? "No ratings yet"}</strong></p>
             {model.latest_feedbacks.length > 0 ? (
               model.latest_feedbacks.map(fb => (

@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
+import {FaUpload ,FaCubes,FaComments,} from "react-icons/fa";
 const getCookie = (name) => {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -16,6 +19,17 @@ const getCookie = (name) => {
 };
 
 const NavbarDev = () => {
+     const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 100); // you can change 100 to 50 or any number
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   const handleLogout = async () => {
   try {
     const response = await fetch("/api/logout/", {
@@ -41,7 +55,8 @@ const NavbarDev = () => {
 };
 
   return (
-      <header className="header-area header-sticky" style={{backgroundColor: "transparent", padding: "10px 0"}}>
+      <header className="header-area header-sticky" style={{        backgroundColor: scrolled ? "white" : "transparent",
+ padding: "10px 0"}}>
           <link
               href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lobster&family=Handlee&display=swap"
               rel="stylesheet"
@@ -56,9 +71,9 @@ const NavbarDev = () => {
                               href="/researcher-homepage"
                               className="logo"
                               style={{
-                                  fontSize: "63px",
+                                  fontSize: "60px",
                                   fontFamily: "'Lobster', cursive",
-                                  color: "white",
+                                   color: scrolled ? "#007f3f" : "white",
                                   textDecoration: "none",
                               }}
                           >
@@ -79,58 +94,60 @@ const NavbarDev = () => {
                           >
                               <li>
                                   <Link
-                                      to="/developer-models"
-                                      style={{
-                                          fontSize: "28px",
-                                          fontFamily: "'Roboto', sans-serif",
-                                          color: "white",
-                                          textDecoration: "none",
-                                      }}
-                                  >
-                                      Models
-                                  </Link>
-                              </li>
-                              <li>
-                                  <Link
                                       to="/researcher-homepage"
                                       style={{
-                                          fontSize: "28px",
+                                          fontSize: "26px",
                                           fontFamily: "'Roboto', sans-serif",
-                                          color: "white",
+                                          color: scrolled ? "black" : "white",
                                           textDecoration: "none",
                                       }}
                                   >
-                                      Upload Model
+                                     <FaUpload /> Uploading
+                                  </Link>
+
+                              </li>
+                              <li>
+                                   <Link
+                                      to="/developer-models"
+                                      style={{
+                                          fontSize: "26px",
+                                          fontFamily: "'Roboto', sans-serif",
+                                          color: scrolled ? "black" : "white",
+                                          textDecoration: "none",
+
+                                      }}
+                                  >
+                                   <FaCubes/> Models
                                   </Link>
                               </li>
                               <li>
                                   <Link
                                       to="/AllModelsFeedbackSummary"
                                       style={{
-                                          fontSize: "28px",
+                                          fontSize: "26px",
                                           fontFamily: "'Roboto', sans-serif",
-                                          color: "white",
+                                          color: scrolled ? "black" : "white",
                                           textDecoration: "none",
                                       }}
                                   >
-                                      Feedback
+                                    <FaComments /> Feedback
                                   </Link>
                               </li>
                               <li>
                                   <button
                                       onClick={handleLogout}
                                       style={{
-                                          fontSize: "28px",
+                                          fontSize: "26px",
                                           fontFamily: "'Roboto', sans-serif",
                                           background: "transparent",
                                           border: "none",
-                                          color: "white",
+                                 color: scrolled ? "black" : "white",
                                           cursor: "pointer",
                                           textDecoration: "none",
                                           padding: 0,
                                       }}
                                   >
-                                     🧾Logout
+                              <FiLogOut /> Logout
                                   </button>
                               </li>
                           </ul>

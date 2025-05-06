@@ -89,9 +89,9 @@ class LogIn extends Component {
   .then((res) => res.json())
   .then((data) => {
       if (data.redirect === "researcher-homepage") {
-          window.location.href = "/researcher-homepage"; // ✅ Correct path
-      } else if (data.redirect === "homepage-user") {
-          window.location.href = "/homepage-user";
+          window.location.href = "/researcher-homepage";
+      } else if (data.redirect === "ManuscriptListPage") {
+          window.location.href = "/ManuscriptListPage";
       } else {
           alert("❌ Login failed or unknown redirect");
       }
@@ -177,9 +177,9 @@ class LogIn extends Component {
                                                         alignItems: "center",
                                                         gap: "10px",
                                                         fontSize: "25px",
-                                                        backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
-                                                        backdropFilter: "blur(10px)", // frost effect
-                                                        WebkitBackdropFilter: "blur(10px)", // Safari support
+                                                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                                                        backdropFilter: "blur(10px)",
+                                                        WebkitBackdropFilter: "blur(10px)",
                                                         padding: "10px 15px",
                                                         fontFamily: "'Roboto', sans-serif",
                                                         color: "#007f3f",
@@ -199,9 +199,9 @@ class LogIn extends Component {
                                                         gap: "10px",
                                                         fontSize: "25px",
                                                         padding: "10px 15px",
-                                                        backgroundColor: "rgba(255, 255, 255, 0.1)", // light transparent white
-                                                        backdropFilter: "blur(10px)", // frost effect
-                                                        WebkitBackdropFilter: "blur(10px)", // Safari support
+                                                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                                                        backdropFilter: "blur(10px)",
+                                                        WebkitBackdropFilter: "blur(10px)",
                                                         fontFamily: "'Roboto', sans-serif",
                                                         color: "#007f3f",
                                                         textDecoration: "none",
